@@ -14,9 +14,12 @@ const app = express();
 // =============================================
 app.use(cors({
   origin: process.env.CLIENT_URL || 'http://localhost:3000',
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 // =============================================
 // ROUTES
@@ -27,6 +30,7 @@ app.use('/api/user',   require('./routes/user.routes'));
 app.use('/api/dsa',    require('./routes/dsa.routes'));
 app.use('/api/github', require('./routes/github.routes'));
 app.use('/api/ai',     require('./routes/ai.routes'));
+app.use('/api/workspace', require('./routes/workspace.routes'));
 
 // Health check — hit this to confirm server is running
 app.get('/', (req, res) => {
